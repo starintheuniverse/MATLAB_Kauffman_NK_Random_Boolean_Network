@@ -18,14 +18,19 @@ function nodeUpdated = displayTopology(node, connectionMatrix, optionString, var
 %       connectionMatrix   -  n x n adjacent matrix (defined as in graph theory)
 %       optionString       -  must be set to either 'arrow' or 'line'
 %       saveFlag           - (Optional) Flag: 1 - Figure will be saved to disk  0 - no saving
-
+%
 %
 %   Output: 
 %       node               -  1 x n structure-array containing updated node information ("output" field)
 
 
-%   Author: Christian Schwarzer - SSC EPFL
-%   CreationDate: 8.11.2002 LastModified: 20.01.2003
+%   Authors: Christian Schwarzer - SSC EPFL
+%            ====[Original RBN Toolbox (20.01.2003)]
+%
+%            Masado Ishii - ECE PSU
+%            ====[Added back update of the x and y components in the structure-array (05.01.2018)]
+%
+%   CreationDate: 8.11.2002 LastModified: 08.01.2018
 
 
 if(nargin == 3 | nargin == 4)
@@ -68,7 +73,7 @@ if(nargin == 3 | nargin == 4)
     
     str = sprintf('Network Topology for N = %d and K = %d', n, sum(connectionMatrix(:,1)));
     set(fHandle,'Color','w','Name', str);
-    
+
     % display nodes: 0 (off) = black, 1 (on) = white
     for m = 1:n
         if(nodeUpdated(m).state == 0)
@@ -77,8 +82,8 @@ if(nargin == 3 | nargin == 4)
             h1 = rectangle('Position',[x(m)-0.5, y(m)-0.5, 1, 1], 'Curvature', [1,1], 'FaceColor','w');  
         end
     end
-    
-    
+
+
     grid off;
     colormap lines;
     cmap = colormap;
@@ -146,6 +151,13 @@ if(nargin == 3 | nargin == 4)
     axis off;
     cameratoolbar('Show');
     cameratoolbar('SetMode','zoom');
+    
+    % Output the xy coordinates of nodes into the node structure-array. (M.Ishii 08.01.2018)
+    % Useful if someone wants to add per-node effects to the figure later.
+    for m = 1:n
+        nodeUpdated(m).x = x(m);
+        nodeUpdated(m).y = y(m);
+    end
     
     if(saveFlag)
         saveFigure(gcf);
