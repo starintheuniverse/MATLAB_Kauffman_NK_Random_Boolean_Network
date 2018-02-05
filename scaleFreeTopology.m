@@ -18,7 +18,7 @@ function conn = scaleFreeTopology(n, gamma, inDegUpper)
 %
 %   Authors:        Masado Ishii - ECE PSU (Teuscher Lab)
 %   Date:           2018-01-25
-%   Last modified:  2018-01-27
+%   Last modified:  2018-02-05
 %
 
 %   Other References
@@ -36,11 +36,25 @@ function conn = scaleFreeTopology(n, gamma, inDegUpper)
 %       expected_total_out_degree = N*SUM_k{ k*P(k) } <= edgeUpper
 %   , and this is a modest constraint. Is this cutoff a problem?
 %
+%   THE ORIGINAL POLICY, TO DEAL WITH THE ABOVE
 %   Prof. Teuscher and I agreed on a policy to handle this. We want to keep the
 %   in-degree upper bound, but we do not want to specify the cutoff for the out-
 %   degree distribution. Instead, always draw from a pure power-law distribution 
 %   until a sequence with acceptable total out-degree is generated. Then continue
 %   as usual.
+%
+%   PROBLEM WITH THE ORIGINAL POLICY
+%   When the degree exponent is very close to 1, huge out-degrees become likely.
+%   It then takes practically forever to stumble upon an out-degree sequence with
+%   sufficiently small total out-degree.
+%
+%   INTERIM SOLUTION
+%   I use a finite cutoff for the out-degree distribution after all. However, I
+%   use a cutoff that is sufficiently large to allow all out-degree sequences we
+%   are interested in. For the occasional out-degree sequence whose sum is still
+%   too large, I use the replacement policy from my original discussion with Prof.
+%   Teuscher. Under the replacement policy, it turns out that a sufficiently large
+%   but finite cutoff of out-degrees is equivalent to an infinite tail.
 
 
 %TODO what really are the implications of rounding? E.g. we want <K> to be exact.
@@ -73,11 +87,12 @@ function conn = scaleFreeTopology(n, gamma, inDegUpper)
     linkUpper = n.*inDegUpper;
 
     % Generate an out-degree sequence that isn't too crowded.
-    kOutMin = 0.9;   %TODO Find out what this should be, depending on zeros wanted. Could be between 0 and 1, or could use 1 and then shift, Y=X-1.
-    outDegSeq = floor(powerLawGenerator([1 n], gamma, kOutMin));
+    kOutMin = 1;   % We decided that we don't need any nodes with 0 out-degree.
+    outDegSeq = (powerLawGeneratorDiscrete([1 n], gamma, kOutMin, linkUpper);       %Note, FINITE CUTOFF
+    %numAttempts = 1;  %DEBUG
     while(sum(outDegSeq) > linkUpper)
-        %TODO what is rounding policy we decided? Right now I use floor().
-        outDegSeq = floor(powerLawGenerator([1 n], gamma, kOutMin));
+        outDegSeq = (powerLawGeneratorDiscrete([1 n], gamma, kOutMin, linkUpper);   %Note, FINITE CUTOFF
+        %numAttempts = numAttempts + 1%; %DEBUG
     end
 
     % Disperse links randomly, with repetition, and so that inDeg <= inDegUpper for all nodes.
