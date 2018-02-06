@@ -29,9 +29,9 @@ function k = powerLawGeneratorDiscrete(s, B, kmin, kmax)
         cmf = cumsum(pmf);
     end
 
-    % Sample from the uniform distribution over (0,1). Make sure to initialize rng.
-    %TODO find a way to sample from [0,1).
-    Y = rand(s);
+    % Sample from the uniform distribution over [0,1). Make sure to initialize rng.
+    Y = randInclude0(s);
+    %Y = rand(s);   % This gives Y in (0,1).
 
     %TODO use binary search (i.e. findfirst() ) if hit performance bottleneck.
     k = arrayfun(@(y) find(y < cmf, 1), Y) + (kmin - 1);
