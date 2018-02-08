@@ -88,10 +88,10 @@ function conn = scaleFreeTopology(n, gamma, inDegUpper)
 
     % Generate an out-degree sequence that isn't too crowded.
     kOutMin = 1;   % We decided that we don't need any nodes with 0 out-degree.
-    outDegSeq = (powerLawGeneratorDiscrete([1 n], gamma, kOutMin, linkUpper);       %Note, FINITE CUTOFF
+    outDegSeq = powerLawGeneratorDiscrete([1 n], gamma, kOutMin, linkUpper);       %Note, FINITE CUTOFF
     %numAttempts = 1;  %DEBUG
     while(sum(outDegSeq) > linkUpper)
-        outDegSeq = (powerLawGeneratorDiscrete([1 n], gamma, kOutMin, linkUpper);   %Note, FINITE CUTOFF
+        outDegSeq = powerLawGeneratorDiscrete([1 n], gamma, kOutMin, linkUpper);   %Note, FINITE CUTOFF
         %numAttempts = numAttempts + 1%; %DEBUG
     end
 
