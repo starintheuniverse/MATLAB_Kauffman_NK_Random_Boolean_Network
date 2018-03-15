@@ -23,8 +23,8 @@ if(nargin == 1)
     nodeUpdated = node;
     for i=1:length(node)
         nodeUpdated(i).nextState = nodeUpdated(i).rule(nodeUpdated(i).lineNumber,1);
-        %if(isempty(nodeUpdated(i).nextState))  %C.Schwarzer
-        if(isempty(nodeUpdated(i).input))       %M.Ishii, 01.02.2018 [Don't update an input-less node.]
+        if(isempty(nodeUpdated(i).nextState))  %C.Schwarzer
+        %if(isempty(nodeUpdated(i).input))       %M.Ishii, 01.02.2018 [Don't update an input-less node.]
             nodeUpdated(i).nextState = nodeUpdated(i).state;
         end
     end
