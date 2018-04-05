@@ -4,6 +4,7 @@ function nodeConn = asciiImportTopology(filenameTopology, node)
 
 %   Author:     Masado Ishii // Teuscher Lab - ECE PSU
 %   Date:       2018-02-09
+%   Modified:   2018-03-13
 
 %   Based on example at
 %   https://www.mathworks.com/help/matlab/import_export/import-text-data-files-with-low-level-io.html
@@ -15,6 +16,10 @@ function nodeConn = asciiImportTopology(filenameTopology, node)
     nodeIdx = 1;
     fileLine = fgetl(fileId);
     while (ischar(fileLine))
+        % Ignore lines that don't contain ';'.
+        if ~any(fileLine == ';')
+            continue;
+        end
         nodeConn(nodeIdx).input = sscanf(fileLine, '%d')';      % Input field is a row vector.
         nodeIdx = nodeIdx + 1;
         fileLine = fgetl(fileId);

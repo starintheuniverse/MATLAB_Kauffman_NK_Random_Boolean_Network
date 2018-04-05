@@ -4,6 +4,7 @@ function asciiExportTopology(filenameTopology, nodeConn)
 
 %   Author:     Masado Ishii // Teuscher Lab - ECE PSU
 %   Date:       2018-02-09
+%   Modified:   2018-03-09
 
     adjacencyList = {nodeConn.input}.';     % Gets a Nx1 cell array, each cell holds a row of [int]s.
 
@@ -13,7 +14,7 @@ function asciiExportTopology(filenameTopology, nodeConn)
 %%    adjacencyJoined = strjoin(string(adjacencyStrings), '\n');
 
     % New way, with classic char vectors and sprintf.
-    adjacencyLines = cellfun(@(row) [sprintf('%d ', row) '\n'], adjacencyList, 'UniformOutput',false);
+    adjacencyLines = cellfun(@(row) [sprintf('%d ', row) ' ;\n'], adjacencyList, 'UniformOutput',false);
     adjacencyJoined = horzcat(adjacencyLines{:});
 
     fileTopology = fopen(filenameTopology, 'w');
