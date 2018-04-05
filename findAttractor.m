@@ -18,7 +18,7 @@ function  [varargout] = findAttractor(varargin)
 %
 %    (2)node                  - 1 x n structure-array containing node information
 %    (2)mode                  - String defining update scheme. Currently supported modes are:
-%                               CRBN, ARBN, DARBN, GARBN, DGARBN
+%                               CRBN, ARBN, DARBN, GARBN, DGARBN, CURBN
 %    (2)tMax                  - Maximal number of time steps to search for attractor
 %
 %   Output:  
@@ -31,7 +31,8 @@ function  [varargout] = findAttractor(varargin)
 
 
 %   Author: Christian Schwarzer - SSC EPFL
-%   CreationDate: 27.11.2002 LastModified: 20.01.2003
+%   CreationDate: 27.11.2002
+%   LastModified: 07.02.2018 (Masado Ishii - ECE PSU)
 
 
 % (1) parameter call has been used
@@ -87,6 +88,8 @@ elseif(nargin == 3)
         fHandle = @evolveGARBN;
     case 'DGARBN' 
         fHandle = @evolveDGARBN;
+    case 'CURBN'
+        fHandle = @evolveCURBN;     % M.Ishii, 2018-02-07
         
     otherwise
         error('Unknown update mode. Type ''help displayEvolution'' to see supported modes')    
